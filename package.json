@@ -4,7 +4,10 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "install": "concurrently \"cd server && npm install\"",
+    "client_build": "cd client && npm run build",
+    "build": "npm i && npm run install && npm run client_build",
+    "start": "cd server && npm run dev"
   },
   "author": "",
   "license": "ISC",

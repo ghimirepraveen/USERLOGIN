@@ -26,7 +26,8 @@ const LoginForm = () => {
       );
 
       console.log("Response:", response.data);
-      document.cookie = `token=${response.data.token}`;
+      // document.cookie = `token=${response.data.token}`;
+      localStorage.setItem("token", response.data.token);
 
       navigate("/profile");
     } catch (error) {
