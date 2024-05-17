@@ -8,8 +8,19 @@ const ProfilePage = () => {
 
   useEffect(() => {
     const fetchUserData = async () => {
+      const TOKEN = document.cookie.split("=")[1];
+      console.log("Token:", TOKEN);
+
+      const headers = {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${TOKEN}`,
+      };
+
       try {
-        const response = await axios.get("https://example.com/api/user");
+        const response = await axios.get(
+          "http://localhost:4000/api/auth/profile",
+          { headers }
+        );
         console.log("Response:", response.data);
         setUser(response.data);
 
@@ -24,11 +35,17 @@ const ProfilePage = () => {
   }, []);
 
   if (loading) {
-    return <div>Loading...</div>;
+    return (
+      <div className="text-green-500 text-3xl text-center mt-20">
+        Loading...
+      </div>
+    );
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return (
+      <div className="text-9xl bg-red-500 m-80">Error: {error.message}</div>
+    );
   }
 
   return (
@@ -67,6 +84,11 @@ const ProfilePage = () => {
             <p className="text-sm text-gray-900">{user.phone}</p>
           </div>
         </div>
+        {error && (
+          <div className="text-red-500 text-sm mt-4">
+            Error: {error.message}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -15,7 +15,7 @@ export const User = {
     const hashedPassword = await bcrypt.hash(password, 10);
     const admin = process.env.ADMIN_EMAIL as string;
     let role = email === admin ? "ADMIN" : "USER";
-    console.log(role);
+
     const existingUser = await prisma.user.findUnique({
       where: {
         email,

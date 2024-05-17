@@ -6,7 +6,6 @@ import { prisma } from "../model/db";
 export const Admin = {
   getallusers: asyncCatch(async (req: Request, res: Response) => {
     const role = req.user.role;
-    console.log(role);
 
     if (role !== "ADMIN") {
       throw new customError("Not authorized", 401);

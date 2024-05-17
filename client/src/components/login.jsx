@@ -1,7 +1,9 @@
 import { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LoginForm = () => {
+  const navigate = useNavigate();
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -19,10 +21,14 @@ const LoginForm = () => {
     e.preventDefault();
     try {
       const response = await axios.post(
-        "https://example.com/api/login",
+        "http://localhost:4000/api/auth/signin",
         formData
       );
+
       console.log("Response:", response.data);
+      document.cookie = `token=${response.data.token}`;
+
+      navigate("/profile");
     } catch (error) {
       console.error("Error submitting the form", error);
     }

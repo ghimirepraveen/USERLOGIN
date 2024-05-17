@@ -27,7 +27,6 @@ exports.User = {
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         const admin = process.env.ADMIN_EMAIL;
         let role = email === admin ? "ADMIN" : "USER";
-        console.log(role);
         const existingUser = yield db_1.prisma.user.findUnique({
             where: {
                 email,

@@ -19,7 +19,6 @@ const db_1 = require("../model/db");
 exports.Admin = {
     getallusers: (0, asyncCatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const role = req.user.role;
-        console.log(role);
         if (role !== "ADMIN") {
             throw new custom_error_1.default("Not authorized", 401);
         }
