@@ -22,7 +22,7 @@ exports.User = {
     signUp: (0, asyncCatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password, name, address, phone } = req.body;
         if (!email || !password || !name || !address || !phone) {
-            throw new custom_error_1.default("missing required fields", 400);
+            throw new custom_error_1.default("Missing Required Fields", 400);
         }
         const hashedPassword = yield bcryptjs_1.default.hash(password, 10);
         const admin = process.env.ADMIN_EMAIL;
@@ -33,7 +33,7 @@ exports.User = {
             },
         });
         if (existingUser) {
-            throw new custom_error_1.default("email already exist", 400);
+            throw new custom_error_1.default("Email Already Exist", 400);
         }
         const user = yield db_1.prisma.user.create({
             data: {
@@ -58,7 +58,7 @@ exports.User = {
     login: (0, asyncCatch_1.default)((req, res) => __awaiter(void 0, void 0, void 0, function* () {
         const { email, password } = req.body;
         if (!email || !password) {
-            throw new custom_error_1.default("email and password are required", 400);
+            throw new custom_error_1.default("Email and Password are required", 400);
         }
         const user = yield db_1.prisma.user.findUnique({
             where: {
@@ -66,11 +66,11 @@ exports.User = {
             },
         });
         if (!user) {
-            throw new custom_error_1.default("user not found", 404);
+            throw new custom_error_1.default("User Not Found", 404);
         }
         const isMatch = yield bcryptjs_1.default.compare(password, user.password);
         if (!isMatch) {
-            throw new custom_error_1.default("invalid credentials", 401);
+            throw new custom_error_1.default("Invalid Credentials", 401);
         }
         const token = jsonwebtoken_1.default.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
             expiresIn: "1h",

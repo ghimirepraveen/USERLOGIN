@@ -1,9 +1,11 @@
 import { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const LoginForm = () => {
   const navigate = useNavigate();
+  const [backendError, setBackendError] = useState(null);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -25,12 +27,20 @@ const LoginForm = () => {
         formData
       );
 
-      console.log("Response:", response.data);
-      // document.cookie = `token=${response.data.token}`;
       localStorage.setItem("token", response.data.token);
 
       navigate("/profile");
     } catch (error) {
+      if (error.response) {
+        const backendErrorMessage =
+          error.response.data?.error || "An error occurred";
+        console.log("Backend error:", backendErrorMessage);
+
+        setBackendError(backendErrorMessage);
+      } else {
+        setBackendError("An error occurred while submitting the form");
+      }
+
       console.error("Error submitting the form", error);
     }
   };
@@ -75,6 +85,16 @@ const LoginForm = () => {
             </button>
           </div>
         </form>
+        <p className="text-sm text-center">
+          Don&apos;t have an account?{" "}
+          <Link to="/" className="text-indigo-600">
+            Sign up
+          </Link>
+        </p>
+
+        {backendError && (
+          <div className="text-red-500 text-sm mt-4">Error: {backendError}</div>
+        )}
       </div>
     </div>
   );

@@ -10,7 +10,7 @@ export const User = {
     const { email, password, name, address, phone } = req.body;
 
     if (!email || !password || !name || !address || !phone) {
-      throw new customError("missing required fields", 400);
+      throw new customError("Missing Required Fields", 400);
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const admin = process.env.ADMIN_EMAIL as string;
@@ -22,7 +22,7 @@ export const User = {
       },
     });
     if (existingUser) {
-      throw new customError("email already exist", 400);
+      throw new customError("Email Already Exist", 400);
     }
 
     const user = await prisma.user.create({
@@ -51,7 +51,7 @@ export const User = {
   login: asyncCatch(async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) {
-      throw new customError("email and password are required", 400);
+      throw new customError("Email and Password are required", 400);
     }
 
     const user = await prisma.user.findUnique({
@@ -61,13 +61,13 @@ export const User = {
     });
 
     if (!user) {
-      throw new customError("user not found", 404);
+      throw new customError("User Not Found", 404);
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      throw new customError("invalid credentials", 401);
+      throw new customError("Invalid Credentials", 401);
     }
     const token = jwt.sign(
       { id: user.id, email: user.email, role: user.role },

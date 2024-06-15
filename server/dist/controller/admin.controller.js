@@ -22,7 +22,15 @@ exports.Admin = {
         if (role !== "ADMIN") {
             throw new custom_error_1.default("Not authorized", 401);
         }
-        const users = yield db_1.prisma.user.findMany();
-        res.status(200).json(users);
+        const page = parseInt(req.query.page) || 1;
+        const limit = parseInt(req.query.limit) || 5;
+        const skip = (page - 1) * limit;
+        const users = yield db_1.prisma.user.findMany({
+            skip,
+            take: limit,
+        });
+        const totalUsers = yield db_1.prisma.user.count();
+        const totalPages = Math.ceil(totalUsers / limit);
+        res.status(200).json({ users: users || [], totalPages, currentPage: page });
     })),
 };

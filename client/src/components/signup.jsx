@@ -11,6 +11,7 @@ const SignUpForm = () => {
     phone: "",
     password: "",
   });
+
   const [errors, setErrors] = useState({
     email: "",
     name: "",
@@ -18,6 +19,8 @@ const SignUpForm = () => {
     phone: "",
     password: "",
   });
+
+  const [backendError, setBackendError] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -30,6 +33,20 @@ const SignUpForm = () => {
   const emailValidation = (email) => {
     const re = /\S+@\S+\.\S+/;
     return re.test(email);
+  };
+
+  const nameValidation = (name) => {
+    const re = /^[a-zA-Z\s]+$/;
+    return re.test(name);
+  };
+
+  const phoneValidation = (phone) => {
+    const re = /^[0-9]+$/;
+    return re.test(phone);
+  };
+
+  const passwordValidation = (password) => {
+    return password.length >= 8 && password.length <= 20;
   };
 
   const validate = () => {
@@ -47,6 +64,24 @@ const SignUpForm = () => {
       errors.email = "Invalid email";
     }
 
+    if (!formData.name) {
+      errors.name = "Name is required";
+    } else if (!nameValidation(formData.name)) {
+      errors.name = "Name can only contain letters and spaces";
+    }
+
+    if (!formData.phone) {
+      errors.phone = "Phone number is required";
+    } else if (!phoneValidation(formData.phone)) {
+      errors.phone = "Phone number can only contain numbers";
+    }
+
+    if (!formData.password) {
+      errors.password = "Password is required";
+    } else if (!passwordValidation(formData.password)) {
+      errors.password = "Password must be between 8 to 20 characters";
+    }
+
     setErrors(errors);
 
     return Object.values(errors).every((error) => error === "");
@@ -62,14 +97,19 @@ const SignUpForm = () => {
           "http://localhost:4000/api/auth/signup",
           formData
         );
+
         console.log("Response:", response.data);
+
         navigateTo("/login");
       } catch (error) {
-        if (error.response && error.response.data) {
-          const backendErrors = error.response.data.errors;
-          setErrors(backendErrors);
+        if (error.response) {
+          const backendErrorMessage =
+            error.response.data?.error || "An error occurred";
+          console.log("Backend error:", backendErrorMessage);
+
+          setBackendError(backendErrorMessage);
         } else {
-          console.error("Error submitting the form", error);
+          setBackendError("An error occurred while submitting the form");
         }
       }
     }
@@ -106,6 +146,7 @@ const SignUpForm = () => {
               required
               className="block w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
+            {errors.name && <p className="text-red-500">{errors.name}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -132,6 +173,7 @@ const SignUpForm = () => {
               required
               className="block w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
+            {errors.phone && <p className="text-red-500">{errors.phone}</p>}
           </div>
           <div>
             <label className="block text-sm font-medium text-gray-700">
@@ -145,6 +187,9 @@ const SignUpForm = () => {
               required
               className="block w-full px-3 py-2 mt-1 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
             />
+            {errors.password && (
+              <p className="text-red-500">{errors.password}</p>
+            )}
           </div>
 
           <div>
@@ -155,6 +200,10 @@ const SignUpForm = () => {
               Sign Up
             </button>
           </div>
+
+          {backendError && (
+            <p className="mt-4 text-red-500 text-center">{backendError}</p>
+          )}
         </form>
 
         <p className="text-sm text-center">
