@@ -74,7 +74,7 @@ export const User = {
 
       process.env.JWT_SECRET as string,
       {
-        expiresIn: "1h",
+        expiresIn: "6h",
       }
     );
 
@@ -137,6 +137,6 @@ export const User = {
       },
     });
 
-    res.status(204).send("user deleted");
+    res.status(204).send("User Deleted");
   }),
 };
