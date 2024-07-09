@@ -12,6 +12,8 @@ userRouter.use(auth);
 userRouter.get("/profile", User.profile);
 userRouter.post("/logout", User.logout);
 userRouter.delete("/delete", User.delete);
+
+//Admin routes
 userRouter.get("/allusers", Admin.getallusers);
 
 export default userRouter;

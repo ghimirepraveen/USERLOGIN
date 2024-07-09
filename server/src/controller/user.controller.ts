@@ -51,7 +51,7 @@ export const User = {
   login: asyncCatch(async (req: Request, res: Response) => {
     const { email, password } = req.body;
     if (!email || !password) {
-      throw new customError("Email and Password are required", 400);
+      throw new customError("Email and Password are Required", 400);
     }
 
     const user = await prisma.user.findUnique({
@@ -136,7 +136,6 @@ export const User = {
         id: userId,
       },
     });
-
     res.status(204).send("User Deleted");
   }),
 };
